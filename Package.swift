@@ -15,7 +15,7 @@ let package = Package(
 
 		//Vapor Packages
 		.package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
-		.package(url: "https://github.com/vapor/fluent.git", .upToNextMajor(from:"3.0.0-rc.3.0.1")),
+		.package(url: "https://github.com/vapor/fluent.git", .upToNextMajor(from:"3.0.0")),
     ],
     targets: [
         .target(name: "FluentTestUtils", dependencies: ["Vapor", "Fluent", "VaporTestUtils", "CodableExtensions"]),
