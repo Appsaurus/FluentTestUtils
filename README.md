@@ -4,7 +4,7 @@
 [![Swift Package Manager](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager/)
 ![License](http://img.shields.io/badge/license-MIT-CCCCCC.svg)
 
-FluentTestUtils makes it easier to quickly setup a Fluent-based Vapor app for library testing purposes. If you have an existing Vapor app that you want to test, see [VaporTestUtils] (https://github.com/Appsaurus/VaporTestUtils).
+FluentTestUtils makes it easier to quickly setup a Fluent-based Vapor app for library testing purposes. If you have an existing Vapor app that you want to test, see [VaporTestUtils](https://github.com/Appsaurus/VaporTestUtils).
 
 ## Installation
 
