@@ -6,23 +6,21 @@
 //
 
 import Foundation
-import VaporTestUtils
+import XCTVaporExtensions
 import Vapor
 import Fluent
+import XCTVapor
+import VaporTestUtils
 
 open class FluentTestCase: VaporTestCase{
 
-	open override func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
+    open override func afterAppConfiguration() async throws {
+        try await super.afterAppConfiguration()
+        try await app.autoMigrate()
+    }
+	
 
-		try super.configure(&config, &env, &services)
-
-		// Configure migrations
-		var migrations = MigrationConfig()
-		configure(migrations: &migrations)
-		services.register(migrations)
-	}
-
-	open func configure(migrations: inout MigrationConfig){
-		
-	}
+//	open func configure(migrations: inout MigrationConfig){
+//		
+//	}
 }

@@ -2,13 +2,14 @@ import Foundation
 import XCTest
 import Fluent
 import CodableExtensions
+import XCTVaporExtensions
 
-public func XCTAssert<D: Database, R>(query: QueryBuilder<D, R>, hasCount count: Int) {
+public func XCTAssert<R>(query: QueryBuilder<R>, hasCount count: Int) {
 	XCTAssertEqual(try query.count().wait(), count)
 }
 
-public func XCTAssert<M: Model>(model: M.Type, hasCount count: Int, on conn: DatabaseConnectable){
-	XCTAssert(query: M.query(on: conn), hasCount: count)
+public func XCTAssert<M: Model>(model: M.Type, hasCount count: Int, on db: Database){
+	XCTAssert(query: M.query(on: db), hasCount: count)
 }
 public func XCTAssertJSONEqual(source: Encodable, candidates: Encodable...) {
 	XCTAssert(jsonIsEqual(source: source, candidates: candidates))
@@ -23,27 +24,28 @@ public func jsonIsEqual(source: Encodable, candidates: [Encodable]) -> Bool{
 	return !candidates.contains(where: {try! $0.encodeAsJSONString() != sourceString})
 }
 
-public func XCTAssertReferencingSameEntity<RE: Model>(_ target: RE, _ testCandidates: RE...) {
+public func XCTAssertReferencingSameEntity<RE: Model>(_ target: RE, 
+                                                      _ testCandidates: RE...) where RE.IDValue: Comparable {
 	testCandidates.forEach { (testCandidate) in
 		XCTAssert(target.isReferencingSameEntity(as: testCandidate))
 	}
 }
 
-public func XCTAssertAllReferencingSameEntity<RE: Model>(_ target: [RE], _ testCandidate: [RE])
-	where RE.ID: Comparable {
+public func XCTAssertAllReferencingSameEntity<RE: Model>(_ target: [RE],
+                                                         _ testCandidate: [RE]) where RE.IDValue: Comparable {
 		XCTAssert(target.areReferencingSameEntities(as: testCandidate))
 }
 
 
-extension Collection where Element: Model, Element.ID: Comparable {
+extension Collection where Element: Model, Element.IDValue: Comparable {
 	public func areReferencingSameEntities(as otherEntities: Self) -> Bool{
-		return hasEqualValues(at: Element.idKey, as: otherEntities)
+        return hasEqualValues(at: \Element.id, as: otherEntities)
 	}
 }
 
-extension Model where Self.Database: QuerySupporting{
+extension Model {
 	public func isReferencingSameEntity(as entityReference: Self) -> Bool {
-		return self[keyPath: Self.idKey] == entityReference[keyPath: Self.idKey]
+        return self.id == entityReference.id
 	}
 }
 
